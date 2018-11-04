@@ -6,33 +6,51 @@ import SearchBooks from './SearchBooks'
 import * as BooksAPI from './BooksAPI'
 
 class BooksApp extends Component {
+  
   state = {
-    books: []
-  }
+      books: []
+   }
 
   componentDidMount() {
-    BooksAPI.getAll()
-      .then((books) => {
-        this.setState(() => ({
-          books
-        }))
-      })
+     BooksAPI.getAll()
+       .then((books) => {
+         this.setState(() => ({
+           books
+         }))
+       })
   }  
+
+  onMoveShelf = (book,shelf) => {
+      BooksAPI.update(book,shelf).then(() => {
+        book.shelf = shelf;
+
+        this.setState((prevState) => ({
+           books: prevState.books.filter(b => b.id !== book.id).concat([book])
+        }))
+
+      })
+  }
 
   render() {
     return (
       <div>
-        <Route exact path='/' render={() => (
-          <ListBooks 
-              books={this.state.books} 
-          />
-          )} 
+      {//JSON.stringify(this.state.books)
+      }
+        <Route exact path='/' render={() => {
+            return (
+              <div>
+                <ListBooks  books={this.state.books}
+                            onMoveShelf={this.onMoveShelf}
+                />
+              </div>
+            )
+         }}
         /> 
 
 
         <Route path='/search' render={({
           history }) => (
-              <SearchBooks
+              <SearchBooks onMoveShelf={this.onMoveShelf}
             />
           )} 
         />
