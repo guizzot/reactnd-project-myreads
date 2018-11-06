@@ -5,8 +5,8 @@ import ListBooks from './ListBooks'
 import SearchBooks from './SearchBooks'
 import * as BooksAPI from './BooksAPI'
 
-class BooksApp extends Component {
-  
+class MyReads extends Component {
+
   state = {
       books: []
    }
@@ -18,7 +18,7 @@ class BooksApp extends Component {
            books
          }))
        })
-  }  
+  }
 
   onMoveShelf = (book,shelf) => {
       BooksAPI.update(book,shelf).then(() => {
@@ -33,31 +33,28 @@ class BooksApp extends Component {
 
   render() {
     return (
-      <div>
-      {//JSON.stringify(this.state.books)
-      }
-        <Route exact path='/' render={() => {
-            return (
-              <div>
-                <ListBooks  books={this.state.books}
-                            onMoveShelf={this.onMoveShelf}
-                />
-              </div>
-            )
-         }}
-        /> 
+            <div>
+              <Route exact path="/" render={() => {
+                return (
+                    <div>
+                      <ListBooks  books={this.state.books}
+                                  onMoveShelf={this.onMoveShelf}
+                      />
+                    </div>
+                  )
+               }}
+              />
 
-
-        <Route path='/search' render={({
-          history }) => (
-              <SearchBooks onMoveShelf={this.onMoveShelf}
-            />
-          )} 
-        />
-
-      </div>     
-    ) 
+              <Route path="/search"
+                     render={({history}) => (
+                       <SearchBooks  onMoveShelf={this.onMoveShelf}
+                                     books={this.state.books}
+                        />
+                      )}
+              />
+            </div>
+    )
   }
 }
 
-export default BooksApp
+export default MyReads
