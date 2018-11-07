@@ -1,24 +1,12 @@
-import React, { Component } from 'react'
+import React from 'react'
 
-class BooksFiltered extends Component {
+const BooksFiltered = (props) => {
 
-	handleMove = (book,shelf) => {
-		this.props.onMoveShelf(book, shelf)
-	}
-
-	render() {
-
-		const { books, type } = this.props
-
-		const booksFiltered = type === ''
-			? books
-			: books.filter((b) => (
-        		b.shelf === type ? b : ''
-    		  ))
+		const { books, handleMove } = props
 
 		return (
 			<ol className="books-grid">
-		        {booksFiltered.map((book) => (
+		        {books.map((book) => (
 		             <li key={book.id}>
 		             	 <div className="book">
 		                 <div className="book-top">
@@ -31,10 +19,10 @@ class BooksFiltered extends Component {
 							</div>
 		                   <div className="book-shelf-changer">
 		                     <select
-		                             onChange={(e) => this.handleMove(book,e.target.value) }
+		                             onChange={(e) => handleMove(book,e.target.value) }
 		                             value={book.shelf}
 		                      >
-		                       <option value="move" >Move to...</option>
+		                       <option value="move" disabled>Move to...</option>
 		                       <option value="currentlyReading">Currently Reading</option>
 		                       <option value="wantToRead">Want to Read</option>
 		                       <option value="read">Read</option>
@@ -49,7 +37,6 @@ class BooksFiltered extends Component {
 		        ))}
 		    </ol>
 		)
-	}
 }
 
 export default BooksFiltered
