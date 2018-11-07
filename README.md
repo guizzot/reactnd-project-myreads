@@ -1,6 +1,6 @@
 # MyReads Project
 
-This is the starter template for the final assessment project for Udacity's React Fundamentals course.
+This is the final template for assessment project for Udacity's React Fundamentals course.
 This application allows to change states of books that are on shelves or not, being possible to filter by books in the page /search.
 
 # HOW TO USE
