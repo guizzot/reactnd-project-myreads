@@ -31,30 +31,40 @@ class MyReads extends Component {
       })
   }
 
+  filterBookType = (books,type) => (
+      books.filter((b) => (
+          b.shelf === type ? b : ''
+      ))
+  )
+
+  handleMove = (book,shelf) => {
+    this.onMoveShelf(book, shelf)
+  }
+
   render() {
     return (
-            <div>
-              <Route exact path="/" render={() => {
-                return (
-                    <div>
+      <React.Fragment>
+              <Route exact path="/" render={() => (
                       <ListBooks  books={this.state.books}
                                   onMoveShelf={this.onMoveShelf}
+                                  filterBookType={this.filterBookType}
+                                  handleMove={this.handleMove}
                       />
-                    </div>
-                  )
-               }}
+                  )}
               />
 
               <Route path="/search"
                      render={({history}) => (
                        <SearchBooks  onMoveShelf={this.onMoveShelf}
                                      books={this.state.books}
+                                     handleMove={this.handleMove}
                         />
                       )}
               />
-            </div>
+      </React.Fragment>
     )
   }
 }
+
 
 export default MyReads
