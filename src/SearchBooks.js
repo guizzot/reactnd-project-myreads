@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import * as BooksAPI from './BooksAPI'
 import BooksFiltered from './BooksFiltered'
 import { Link } from 'react-router-dom'
+import {DebounceInput} from 'react-debounce-input';
 
 class SearchBooks extends Component {
 
@@ -56,7 +57,7 @@ class SearchBooks extends Component {
     render(){
 
       const { search, query } = this.state
-      const { onMoveShelf, books } = this.props
+      const { onMoveShelf, books, handleMove } = this.props
 
       return(
               <div className="app">
@@ -68,11 +69,12 @@ class SearchBooks extends Component {
                     >Close</Link>
                     <div className="search-books-input-wrapper">
 
-                      <input
-                            type="text"
-                            placeholder="Search by title or author"
-                            value={search}
-                            onChange={(e) => this.updateSearch(e.target.value,books)}
+                      <DebounceInput
+                                     minLength={2}
+                                     debounceTimeout={100}
+                                     onChange={(e) => this.updateSearch(e.target.value,books)}
+                                     type="text"
+                                     placeholder="Search by title or author"
                       />
 
                     </div>
@@ -86,8 +88,9 @@ class SearchBooks extends Component {
                       { search.length > 0 && query !== 'empty' && (
                           <ol className="books-grid">
                             <BooksFiltered books={query}
-                                           type=''
-                                           onMoveShelf={onMoveShelf}/>
+                                           onMoveShelf={onMoveShelf}
+                                           handleMove={handleMove}
+                            />
                           </ol>
                         )
                       }
