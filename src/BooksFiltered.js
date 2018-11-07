@@ -1,14 +1,8 @@
 import React, { Component } from 'react'
-import * as BooksAPI from './BooksAPI'
 
 class BooksFiltered extends Component {
 
-	state = {
-		actualShelf : 'none'
-	}
-
 	handleMove = (book,shelf) => {
-		this.setState({actualShelf: shelf})
 		this.props.onMoveShelf(book, shelf)
 	}
 
@@ -16,15 +10,11 @@ class BooksFiltered extends Component {
 
 		const { books, type } = this.props
 
-		const booksFiltered = type === '' 
+		const booksFiltered = type === ''
 			? books
 			: books.filter((b) => (
         		b.shelf === type ? b : ''
     		  ))
-
-		//book.imageLinks.smallThumbnail
-
-		//const bookImage = books.imageLinks ? books.imageLinks.thumbnail : 'http://andrewcmaxwell.com/wp-content/themes/acm_2014/images/book_not_found.png'
 
 		return (
 			<ol className="books-grid">
@@ -33,17 +23,18 @@ class BooksFiltered extends Component {
 		             	 <div className="book">
 		                 <div className="book-top">
 		                   <div className="book-cover">
-								<img 
-									src={book.imageLinks ? book.imageLinks.thumbnail : 'http://andrewcmaxwell.com/wp-content/themes/acm_2014/images/book_not_found.png'} 
-									width="128" 
-									height="200" />
+								<img
+									src={book.imageLinks ? book.imageLinks.thumbnail : 'http://andrewcmaxwell.com/wp-content/themes/acm_2014/images/book_not_found.png'}
+									width='128'
+									height='200'
+									alt={book.title} />
 							</div>
 		                   <div className="book-shelf-changer">
-		                     <select 
+		                     <select
 		                             onChange={(e) => this.handleMove(book,e.target.value) }
-		                             value={this.actualShelf ==! 'none' ? this.actualShelf : book.shelf}
+		                             value={book.shelf}
 		                      >
-		                       <option value="move" disabled>Move to...</option>
+		                       <option value="move" >Move to...</option>
 		                       <option value="currentlyReading">Currently Reading</option>
 		                       <option value="wantToRead">Want to Read</option>
 		                       <option value="read">Read</option>
@@ -55,8 +46,8 @@ class BooksFiltered extends Component {
 		                 <div className="book-authors">{book.authors}</div>
 		               </div>
 		             </li>
-		        ))}         
-		    </ol>  
+		        ))}
+		    </ol>
 		)
 	}
 }

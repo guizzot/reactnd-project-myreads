@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import * as BooksAPI from './BooksAPI'
 import BooksFiltered from './BooksFiltered'
+import { Link } from 'react-router-dom'
 
 class SearchBooks extends Component {
 
@@ -9,15 +10,40 @@ class SearchBooks extends Component {
       query : []
     }
 
-    updateSearch = (query) => {
-      if(query !== ''){
+    hasShelf = (bookSearched,bookInShelf) => {
+      let book
+
+      bookInShelf.map((b) => {
+        if(bookSearched.id === b.id){
+          book = b
+        }
+        return book
+      })
+
+      return book
+    }
+
+    updateSearch = (searchValue,shelfBook) => {
+      if(searchValue.length > 0){
           this.setState(() => ({
-            search: query
+            search: searchValue
           }))
 
-          BooksAPI.search(query).then((query) => {
+          BooksAPI.search(searchValue).then((query) => {
+
             this.setState(() => ({
-               query: (query.error) ? 'empty' : query
+               query: (query.error)
+                    ? 'empty'
+                    : query.map(b => {
+                        let bookInShelf = this.hasShelf(b,shelfBook)
+
+                        if (bookInShelf === undefined) {
+                          b.shelf = 'none'
+                          return b
+                        } else {
+                          return bookInShelf
+                        }
+                      })
             }))
            })
         } else {
@@ -25,31 +51,28 @@ class SearchBooks extends Component {
               search: '', query : []
            }))
         }
-      } 
+      }
 
     render(){
 
       const { search, query } = this.state
-      const { onMoveShelf } = this.props
+      const { onMoveShelf, books } = this.props
 
       return(
               <div className="app">
-              {
-                //JSON.stringify(query)
-              }
-              {
-                //JSON.stringify(result)
-              }
                 <div className="search-books">
                   <div className="search-books-bar">
-                    <a className="close-search">Close</a>
+                    <Link
+                          to="/"
+                          className="close-search"
+                    >Close</Link>
                     <div className="search-books-input-wrapper">
-                      
-                      <input 
-                            type="text" 
+
+                      <input
+                            type="text"
                             placeholder="Search by title or author"
                             value={search}
-                            onChange={(e) => this.updateSearch(e.target.value)}
+                            onChange={(e) => this.updateSearch(e.target.value,books)}
                       />
 
                     </div>
@@ -62,7 +85,7 @@ class SearchBooks extends Component {
                       }
                       { search.length > 0 && query !== 'empty' && (
                           <ol className="books-grid">
-                            <BooksFiltered books={query} 
+                            <BooksFiltered books={query}
                                            type=''
                                            onMoveShelf={onMoveShelf}/>
                           </ol>
